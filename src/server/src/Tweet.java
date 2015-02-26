@@ -9,6 +9,10 @@ public class Tweet {
       this.posted = posted;
     }
 
+    public void liked(){
+      this.numStars += 1;
+    }
+
     public long tweetId;
     public String tweetString;
     public int numStars;

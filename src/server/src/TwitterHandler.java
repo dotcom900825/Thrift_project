@@ -94,13 +94,20 @@ public class TwitterHandler implements Twitter.Iface {
     public List<Tweet> readTweetsByUser(String handle, int howmany)
         throws NoSuchUserException
     {
+        if(!accounts.containsKey(handle)){
+            throw new NoSuchUserException(handle);
+        }
+
         return null;
     }
 
     @Override
     public List<Tweet> readTweetsBySubscription(String handle, int howmany)
         throws NoSuchUserException
-    {
+    {   
+        if(!accounts.containsKey(handle)){
+            throw new NoSuchUserException(handle);
+        }
         return null;
     }
 
@@ -108,5 +115,12 @@ public class TwitterHandler implements Twitter.Iface {
     public void star(String handle, long tweetId) throws
         NoSuchUserException, NoSuchTweetException
     {
+        if(!accounts.containsKey(handle)){
+            throw new NoSuchUserException(handle);
+        }
+
+        Account target = accounts.get(handle);
+        target.favoriting_tweet(tweetId);
+
     }
 }

@@ -33,6 +33,11 @@ public class Account {
       tweet_lists.put(tweet.tweetId, tweet);
     }
 
+    public void favoriting_tweet(long tweet_id){
+      Tweet target = tweet_lists.get(tweet_id);
+      target.liked();
+    }
+
     public String handle;
     private ArrayList following_accounts;
     private Map<Long,Tweet> tweet_lists;
