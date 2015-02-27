@@ -104,6 +104,8 @@ public class TwitterHandler implements Twitter.Iface {
         Account target = accounts.get(handle);
         ArrayList<Tweet> alist = target.getTweetArrayList();
         List<Tweet>  output = new ArrayList<Tweet>(); 
+
+        //collect the last <howmany> tweets from the list in reverse order
         for(int i = alist.size()-1; i >= 0 && i >= (alist.size() - howmany); --i){
             output.add(alist.get(i));
         }
@@ -128,6 +130,7 @@ public class TwitterHandler implements Twitter.Iface {
         Account target = accounts.get(handle);
         ArrayList<String> tarlist = target.get_subscribed_accounts();
 
+        //matain a minimum heap to keep tracking on the latest <howmany> tweets
         PriorityQueue<Tweet> priorityQ = new PriorityQueue<Tweet>(howmany, timestanpComparator);
 
         LinkedList<Tweet>  output = new LinkedList<Tweet>(); 
@@ -136,14 +139,19 @@ public class TwitterHandler implements Twitter.Iface {
         Tweet tw;
         int count = 0;
 
+        //traverse user's following_list
         for(int j = 0; j < tarlist.size(); ++j){
             alist = accounts.get(tarlist.get(j)).getTweetArrayList();
+            //Only process the last <howmany> entries in each list
             for(int i = alist.size()-1; i >= 0 && i >= (alist.size()-howmany); --i){
                 tw = alist.get(i);
-                if(count < howmany){
+                if(count < howmany){//If the heap size is smaller than <howmany>, add it.
                     count++;
                     priorityQ.add(tw);
                 }
+                //If the heap size equals <howmany>, then compare the new node with the top node.
+                //If the new node is greater than the top node, pop out the top node and
+                //add the new node into the heap.
                 else{
                     if( timestanpComparator.compare(tw, priorityQ.peek()) > 0 ){
                         priorityQ.poll();
@@ -152,7 +160,7 @@ public class TwitterHandler implements Twitter.Iface {
                 }
             }
         }
-
+        //collect the output list.
         for(int i = priorityQ.size() - 1; i >= 0; --i){
             Tweet temp = priorityQ.poll();
             System.out.println(temp);
