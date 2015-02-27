@@ -114,7 +114,7 @@ public class TwitterHandler implements Twitter.Iface {
     public static Comparator<Tweet> timestanpComparator = new Comparator<Tweet>(){
         @Override
         public int compare(Tweet c1, Tweet c2) {
-            return (int) (c2.posted - c1.posted);
+            return (int) (c1.posted - c2.posted);
         }
     };
 
@@ -145,7 +145,7 @@ public class TwitterHandler implements Twitter.Iface {
                     priorityQ.add(tw);
                 }
                 else{
-                    if( timestanpComparator.compare(tw, priorityQ.peek()) >0 ){
+                    if( timestanpComparator.compare(tw, priorityQ.peek()) > 0 ){
                         priorityQ.poll();
                         priorityQ.add(tw);
                     }
