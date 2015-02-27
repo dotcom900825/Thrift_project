@@ -8,8 +8,9 @@ public class Account {
 
     public Account(String handle) {
         this.handle = handle;
-        this.following_accounts = new ArrayList();
+        this.following_accounts = new ArrayList<String>();
         this.tweet_lists = new HashMap<Long, Tweet>();
+        this.tweet_arraylist = new ArrayList<Tweet>();
     }
 
     public void add_to_subscribed_accounts(String handle){
@@ -21,7 +22,7 @@ public class Account {
     }
 
 
-    public ArrayList get_subscribed_accounts(){
+    public ArrayList<String> get_subscribed_accounts(){
       return following_accounts;
     }
 
@@ -31,6 +32,7 @@ public class Account {
 
     public void push_to_tweet_list(Tweet tweet){
       tweet_lists.put(tweet.tweetId, tweet);
+      tweet_arraylist.add(tweet);
     }
 
     public void favoriting_tweet(long tweet_id){
@@ -38,7 +40,12 @@ public class Account {
       target.liked();
     }
 
+    public ArrayList<Tweet> getTweetArrayList(){
+      return tweet_arraylist;
+    }
+
     public String handle;
-    private ArrayList following_accounts;
+    private ArrayList<String> following_accounts;
     private Map<Long,Tweet> tweet_lists;
+    private ArrayList<Tweet> tweet_arraylist;
 }
