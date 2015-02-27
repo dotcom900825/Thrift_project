@@ -44,8 +44,8 @@ public class TwitterHandler implements Twitter.Iface {
         }
 
         Account target = accounts.get(handle);
-        if(!target.check_subscribed_accounts(handle)){
-            target.add_to_subscribed_accounts(handle);
+        if(!target.check_subscribed_accounts(theirhandle)){
+            target.add_to_subscribed_accounts(theirhandle);
         }
 
 
@@ -64,8 +64,8 @@ public class TwitterHandler implements Twitter.Iface {
         }
 
         Account target = accounts.get(handle);
-        if(target.check_subscribed_accounts(handle)){
-            target.remove_to_subscribed_accounts(handle);
+        if(target.check_subscribed_accounts(theirhandle)){
+            target.remove_to_subscribed_accounts(theirhandle);
         }
     }
 
