@@ -101,18 +101,12 @@ public class TwitterHandler implements Twitter.Iface {
         if(!accounts.containsKey(handle)){
             throw new NoSuchUserException(handle);
         }
-        System.out.println("step 11");
         Account target = accounts.get(handle);
-        System.out.println("step 22");
         ArrayList<Tweet> alist = target.getTweetArrayList();
-        System.out.println("step 33");
         List<Tweet>  output = new ArrayList<Tweet>(); 
-        System.out.println("step 44");
-        for(int i=alist.size()-1; i>=0 && i>=(alist.size()-howmany); --i){
-            System.out.println("step "+i);
+        for(int i = alist.size()-1; i >= 0 && i >= (alist.size() - howmany); --i){
             output.add(alist.get(i));
         }
-        System.out.println("step final");
         return output;
     }
 
@@ -120,7 +114,7 @@ public class TwitterHandler implements Twitter.Iface {
     public static Comparator<Tweet> timestanpComparator = new Comparator<Tweet>(){
         @Override
         public int compare(Tweet c1, Tweet c2) {
-            return (int) (c1.posted - c2.posted);
+            return (int) (c2.posted - c1.posted);
         }
     };
     @Override
