@@ -81,11 +81,11 @@ try:
   client.post("ymq", "10")
   print "ymq succefully post a new tweet55"
 
-  client.readTweetsByUser("dotcomXY", 3);
-  print "read dotcomXY's 3 posts"
+  res = client.readTweetsByUser("dotcomXY", 3);
+  print res
 
-  client.readTweetsBySubscription("xcf", 5);
-  print "xcf read 5 subscription posts"
+  res = client.readTweetsBySubscription("xcf", 5);
+  print res
 
   # Close!
   transport.close()
