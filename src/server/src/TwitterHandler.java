@@ -127,27 +127,39 @@ public class TwitterHandler implements Twitter.Iface {
         }
         Account target = accounts.get(handle);
         ArrayList<String> tarlist = target.get_subscribed_accounts();
+
         PriorityQueue<Tweet> priorityQ = new PriorityQueue<Tweet>(howmany, timestanpComparator);
+
         LinkedList<Tweet>  output = new LinkedList<Tweet>(); 
         ArrayList<Tweet> alist;
+
         Tweet tw;
         int count = 0;
-        for(int j=0; j<tarlist.size(); ++j){
+
+        for(int j = 0; j < tarlist.size(); ++j){
             alist = accounts.get(tarlist.get(j)).getTweetArrayList();
-            for(int i=alist.size()-1; i>=0 && i>=(alist.size()-howmany); --i){
+            for(int i = alist.size()-1; i >= 0 && i >= (alist.size()-howmany); --i){
                 tw = alist.get(i);
-                if(count<howmany)
+                if(count < howmany){
+                    count++;
                     priorityQ.add(tw);
+                }
                 else{
-                    if( timestanpComparator.compare(tw,priorityQ.peek())>0 ){
+                    if( timestanpComparator.compare(tw, priorityQ.peek()) >0 ){
                         priorityQ.poll();
                         priorityQ.add(tw);
                     }
                 }
             }
         }
-        for(int i = priorityQ.size() - 1; i >= 0; --i)
-            output.addFirst(priorityQ.poll());
+
+        for(int i = priorityQ.size() - 1; i >= 0; --i){
+            Tweet temp = priorityQ.poll();
+            System.out.println(temp);
+
+            output.addFirst(temp);            
+        }
+
         return output;
     }
 
