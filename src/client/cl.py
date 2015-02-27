@@ -51,34 +51,34 @@ try:
   client.subscribe("xcf", "ymq")
   print 'xcf succefully subscribed to ymq account'
 
-  client.post("dotcomXY", "test1")
+  client.post("dotcomXY", "1")
   print "dotcomXY succefully post a new tweet1"
 
-  client.post("dotcomXY", "test2")
+  client.post("dotcomXY", "2")
   print "dotcomXY succefully post a new tweet2"
 
-  client.post("dotcomXY", "test3")
+  client.post("dotcomXY", "3")
   print "dotcomXY succefully post a new tweet3"
 
-  client.post("ymq", "test1q")
+  client.post("ymq", "4")
   print "ymq succefully post a new tweet11"
 
-  client.post("ymq", "test22")
+  client.post("ymq", "5")
   print "ymq succefully post a new tweet22"
 
-  client.post("ymq", "test33")
+  client.post("ymq", "6")
   print "ymq succefully post a new tweet33"
 
-  client.post("dotcomXY", "test4")
+  client.post("dotcomXY", "7")
   print "dotcomXY succefully post a new tweet4"
 
-  client.post("dotcomXY", "test5")
+  client.post("dotcomXY", "8")
   print "dotcomXY succefully post a new tweet5"
 
-  client.post("ymq", "test44")
+  client.post("ymq", "9")
   print "ymq succefully post a new tweet44"
 
-  client.post("ymq", "test55")
+  client.post("ymq", "10")
   print "ymq succefully post a new tweet55"
 
   client.readTweetsByUser("dotcomXY", 3);
