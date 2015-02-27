@@ -117,6 +117,7 @@ public class TwitterHandler implements Twitter.Iface {
             return (int) (c2.posted - c1.posted);
         }
     };
+
     @Override
     public List<Tweet> readTweetsBySubscription(String handle, int howmany)
         throws NoSuchUserException
@@ -145,7 +146,7 @@ public class TwitterHandler implements Twitter.Iface {
                 }
             }
         }
-        for(int i=0; i<priorityQ.size(); ++i)
+        for(int i = priorityQ.size() - 1; i >= 0; --i)
             output.addFirst(priorityQ.poll());
         return output;
     }
