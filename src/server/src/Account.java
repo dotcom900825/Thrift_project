@@ -37,7 +37,8 @@ public class Account {
 
     public void favoriting_tweet(long tweet_id){
       Tweet target = tweet_lists.get(tweet_id);
-      target.liked();
+      int num = target.getNumStars();
+      target.setNumStars(num + 1);
     }
 
     public ArrayList<Tweet> getTweetArrayList(){

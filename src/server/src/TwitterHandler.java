@@ -84,7 +84,8 @@ public class TwitterHandler implements Twitter.Iface {
         Account target = accounts.get(handle);
 
         Tweet new_tweet = new Tweet(
-            (long)rnd.nextInt(Integer.MAX_VALUE), 
+            (long)rnd.nextInt(Integer.MAX_VALUE),
+            handle,
             System.currentTimeMillis(),
             0,
             tweetString
