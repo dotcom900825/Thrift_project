@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-
+from time import sleep
 sys.path.append('gen-py')
 
 from cse124 import Twitter
@@ -51,33 +51,43 @@ try:
   client.subscribe("xcf", "ymq")
   print 'xcf succefully subscribed to ymq account'
 
+  sleep(0.1)
   client.post("dotcomXY", "1")
   print "dotcomXY succefully post a new tweet1"
 
+  sleep(0.1)
   client.post("dotcomXY", "2")
   print "dotcomXY succefully post a new tweet2"
 
+  sleep(0.1)
   client.post("dotcomXY", "3")
   print "dotcomXY succefully post a new tweet3"
 
+  sleep(0.1)
   client.post("ymq", "4")
   print "ymq succefully post a new tweet11"
 
+  sleep(0.1)
   client.post("ymq", "5")
   print "ymq succefully post a new tweet22"
 
+  sleep(0.1)
   client.post("ymq", "6")
   print "ymq succefully post a new tweet33"
 
+  sleep(0.1)
   client.post("dotcomXY", "7")
   print "dotcomXY succefully post a new tweet4"
 
+  sleep(0.1)
   client.post("dotcomXY", "8")
   print "dotcomXY succefully post a new tweet5"
 
+  sleep(0.1)
   client.post("ymq", "9")
   print "ymq succefully post a new tweet44"
 
+  sleep(0.1)
   client.post("ymq", "10")
   print "ymq succefully post a new tweet55"
 
