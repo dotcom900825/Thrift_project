@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import thread
 from time import sleep
 sys.path.append('gen-py')
 
@@ -11,6 +12,9 @@ from thrift import Thrift
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
+
+def createUser(client, name):
+  client.createUser(name)
 
 try:
   transport = TSocket.TSocket('localhost', 9090)
@@ -29,6 +33,9 @@ try:
 
   client.ping()
   print 'ping()'
+
+  thread.start_new_thread(createUser, (client, "dotcomXY"))
+  thread.start_new_thread(createUser, (client, "dotcomXY"))
 
   client.createUser("dotcomXY")
   print 'Succefully created user dotcomXY'

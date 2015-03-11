@@ -23,7 +23,7 @@ public class TwitterHandler implements Twitter.Iface {
     }
 
     @Override
-    public void createUser(String handle) throws AlreadyExistsException
+    public synchronized void createUser(String handle) throws AlreadyExistsException
     {
         if(accounts.containsKey(handle)){
             throw new AlreadyExistsException(handle);
