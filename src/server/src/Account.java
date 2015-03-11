@@ -13,11 +13,11 @@ public class Account {
         this.tweet_arraylist = new ArrayList<Tweet>();
     }
 
-    public void add_to_subscribed_accounts(String handle){
+    public synchronized void add_to_subscribed_accounts(String handle){
       this.following_accounts.add(handle);
     }
 
-    public void remove_to_subscribed_accounts(String handle){
+    public synchronized void remove_to_subscribed_accounts(String handle){
       this.following_accounts.remove(handle);
     }
 
@@ -30,12 +30,12 @@ public class Account {
       return following_accounts.contains(handle);
     }
 
-    public void push_to_tweet_list(Tweet tweet){
+    public synchronized void push_to_tweet_list(Tweet tweet){
       tweet_lists.put(tweet.tweetId, tweet);
       tweet_arraylist.add(tweet);
     }
 
-    public void favoriting_tweet(long tweet_id){
+    public synchronized void favoriting_tweet(long tweet_id){
       Tweet target = tweet_lists.get(tweet_id);
       int num = target.getNumStars();
       target.setNumStars(num + 1);
