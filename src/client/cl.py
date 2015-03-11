@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-import thread
+import threading
 from time import sleep
 sys.path.append('gen-py')
 
@@ -14,10 +14,16 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 def createUser(client, name):
-  client.createUser(name)
+  try:
+    print "start executing"
+    client.createUser(name)
+    print "Succefully created user dotcomXY"
+
+  except AlreadyExistsException, userx:
+    print 'AlreadyExistsException'
 
 try:
-  transport = TSocket.TSocket('localhost', 9090)
+  transport = TSocket.TSocket('localhost', 9876)
 
   # Buffering is critical. Raw sockets are very slow
   transport = TTransport.TBufferedTransport(transport)
@@ -34,78 +40,81 @@ try:
   client.ping()
   print 'ping()'
 
-  thread.start_new_thread(createUser, (client, "dotcomXY"))
-  thread.start_new_thread(createUser, (client, "dotcomXY"))
+  t1 = threading.Thread(target = createUser, args = (client, "dotcomXY"))
+  t2 = threading.Thread(target = createUser, args = (client, "dotcomXY"))
 
-  client.createUser("dotcomXY")
-  print 'Succefully created user dotcomXY'
+  t1.start()
+  t2.start()
 
-  client.createUser("xcf")
-  print 'Succefully created user xcf'
+  # client.createUser("dotcomXY")
+  # print 'Succefully created user dotcomXY'
 
-  client.createUser("ymq")
-  print 'Succefully created user ymq'
+  # client.createUser("xcf")
+  # print 'Succefully created user xcf'
 
-  client.subscribe("dotcomXY", "xcf")
-  print 'dotcomXY succefully subscribed to xcf account'
+  # client.createUser("ymq")
+  # print 'Succefully created user ymq'
 
-  client.unsubscribe("dotcomXY", "xcf")
-  print 'dotcomXY succefully unsubscribed xcf account'
+  # client.subscribe("dotcomXY", "xcf")
+  # print 'dotcomXY succefully subscribed to xcf account'
 
-  client.subscribe("xcf", "dotcomXY")
-  print 'xcf succefully subscribed to dotcomXY account'
+  # client.unsubscribe("dotcomXY", "xcf")
+  # print 'dotcomXY succefully unsubscribed xcf account'
 
-  client.subscribe("xcf", "ymq")
-  print 'xcf succefully subscribed to ymq account'
+  # client.subscribe("xcf", "dotcomXY")
+  # print 'xcf succefully subscribed to dotcomXY account'
 
-  sleep(0.1)
-  client.post("dotcomXY", "1")
-  print "dotcomXY succefully post a new tweet1"
+  # client.subscribe("xcf", "ymq")
+  # print 'xcf succefully subscribed to ymq account'
 
-  sleep(0.1)
-  client.post("dotcomXY", "2")
-  print "dotcomXY succefully post a new tweet2"
+  # sleep(0.1)
+  # client.post("dotcomXY", "1")
+  # print "dotcomXY succefully post a new tweet1"
 
-  sleep(0.1)
-  client.post("dotcomXY", "3")
-  print "dotcomXY succefully post a new tweet3"
+  # sleep(0.1)
+  # client.post("dotcomXY", "2")
+  # print "dotcomXY succefully post a new tweet2"
 
-  sleep(0.1)
-  client.post("ymq", "4")
-  print "ymq succefully post a new tweet11"
+  # sleep(0.1)
+  # client.post("dotcomXY", "3")
+  # print "dotcomXY succefully post a new tweet3"
 
-  sleep(0.1)
-  client.post("ymq", "5")
-  print "ymq succefully post a new tweet22"
+  # sleep(0.1)
+  # client.post("ymq", "4")
+  # print "ymq succefully post a new tweet11"
 
-  sleep(0.1)
-  client.post("ymq", "6")
-  print "ymq succefully post a new tweet33"
+  # sleep(0.1)
+  # client.post("ymq", "5")
+  # print "ymq succefully post a new tweet22"
 
-  sleep(0.1)
-  client.post("dotcomXY", "7")
-  print "dotcomXY succefully post a new tweet4"
+  # sleep(0.1)
+  # client.post("ymq", "6")
+  # print "ymq succefully post a new tweet33"
 
-  sleep(0.1)
-  client.post("dotcomXY", "8")
-  print "dotcomXY succefully post a new tweet5"
+  # sleep(0.1)
+  # client.post("dotcomXY", "7")
+  # print "dotcomXY succefully post a new tweet4"
 
-  sleep(0.1)
-  client.post("ymq", "9")
-  print "ymq succefully post a new tweet44"
+  # sleep(0.1)
+  # client.post("dotcomXY", "8")
+  # print "dotcomXY succefully post a new tweet5"
 
-  sleep(0.1)
-  client.post("ymq", "10")
-  print "ymq succefully post a new tweet55"
+  # sleep(0.1)
+  # client.post("ymq", "9")
+  # print "ymq succefully post a new tweet44"
 
-  res = client.readTweetsByUser("dotcomXY", 3);
-  print res
+  # sleep(0.1)
+  # client.post("ymq", "10")
+  # print "ymq succefully post a new tweet55"
 
-  res = client.readTweetsBySubscription("xcf", 5);
-  print res
+  # res = client.readTweetsByUser("dotcomXY", 3);
+  # print res
+
+  # res = client.readTweetsBySubscription("xcf", 5);
+  # print res
 
   # Close!
-  transport.close()
+  #transport.close()
 
 except Thrift.TException, tx:
   print '%s' % (tx.message)
