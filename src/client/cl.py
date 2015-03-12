@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-import sys
-from time import sleep
+import sys, time
+import argparse
+
 sys.path.append('gen-py')
 
 from cse124 import Twitter
@@ -12,102 +13,143 @@ from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
-try:
-  transport = TSocket.TSocket('localhost', 9876)
+server = ""
+port = ""
 
-  # Buffering is critical. Raw sockets are very slow
-  transport = TTransport.TBufferedTransport(transport)
+def do_RPC(service, handle, value=None):
+    try:
+        transport = TSocket.TSocket(server, port)
 
-  # Wrap in a protocol
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        # Buffering is critical. Raw sockets are very slow
+        transport = TTransport.TBufferedTransport(transport)
 
-  # Create a client to use the protocol encoder
-  client = Twitter.Client(protocol)
+        # Wrap in a protocol
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
 
-  # Connect!
-  transport.open()
+        # Create a client to use the protocol encoder
+        client = Twitter.Client(protocol)
+        # Connect!
+        transport.open()
 
-  client.ping()
-  print 'ping()'
+        ## supported services
+        if service == "createUser":
+            return client.createUser(handle)
 
-  client.createUser("dotcomXY")
-  print 'Succefully created user dotcomXY'
+        elif service == "subscribe":
+            return client.subscribe(handle, value)
 
-  client.createUser("xcf")
-  print 'Succefully created user xcf'
+        elif service == "post":
+            return client.post(handle, value)
 
-  client.createUser("ymq")
-  print 'Succefully created user ymq'
+        elif service == "readTweetsByUser":
+            return client.readTweetsByUser(handle, int(value))
 
-  client.subscribe("dotcomXY", "xcf")
-  print 'dotcomXY succefully subscribed to xcf account'
+        elif service == "readTweetsByUser":
+            return client.readTweetsByUser(handle, int(value))
+        elif service == "star":
+            return client.star(handle, int(value))
+               
 
-  client.unsubscribe("dotcomXY", "xcf")
-  print 'dotcomXY succefully unsubscribed xcf account'
+        # Close!
+        transport.close()
+    ## supported exceptions
+    except AlreadyExistsException, userx:
+        return 'AlreadyExistsException'
 
-  client.subscribe("xcf", "dotcomXY")
-  print 'xcf succefully subscribed to dotcomXY account'
+    except NoSuchUserException:
+        return 'NoSuchUserException'
 
-  client.subscribe("xcf", "ymq")
-  print 'xcf succefully subscribed to ymq account'
+    except TweetTooLongException:
+        return 'TweetTooLongException'
 
-  # we also need to test the star successfully
+    except NoSuchTweetException:
+        return "NoSuchTweetException"
 
-  # test tweet too long exception
-  client.post("ymq", "Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! ")
+    except Thrift.TException, tx:
+        return '%s' % (tx.message)
 
-  sleep(0.1)
-  client.post("dotcomXY", "1")
-  print "dotcomXY succefully post a new tweet1"
-
-  sleep(0.1)
-  client.post("dotcomXY", "2")
-  print "dotcomXY succefully post a new tweet2"
-
-  sleep(0.1)
-  client.post("dotcomXY", "3")
-  print "dotcomXY succefully post a new tweet3"
-
-  sleep(0.1)
-  client.post("ymq", "4")
-  print "ymq succefully post a new tweet11"
-
-  sleep(0.1)
-  client.post("ymq", "5")
-  print "ymq succefully post a new tweet22"
-
-  sleep(0.1)
-  client.post("ymq", "6")
-  print "ymq succefully post a new tweet33"
-
-  sleep(0.1)
-  client.post("dotcomXY", "7")
-  print "dotcomXY succefully post a new tweet4"
-
-  sleep(0.1)
-  client.post("dotcomXY", "8")
-  print "dotcomXY succefully post a new tweet5"
-
-  sleep(0.1)
-  client.post("ymq", "9")
-  print "ymq succefully post a new tweet44"
-
-  sleep(0.1)
-  client.post("ymq", "10")
-  print "ymq succefully post a new tweet55"
-
-  # test not such tweet exception
-  #client.star("dotcomXY" ,87654321 )
+    except Exception, userx:
+        return 'ERROR:  %s' %(userx)
 
 
-  res = client.readTweetsByUser("dotcomXY", 3);
-  print res
+def do_tests():
+    # createUser alice
+    print "createUser for Alice .."
+    if do_RPC('createUser', 'alice'):
+        print 'Failed!'
+    else: 
+        print "Passed!"
 
-  res = client.readTweetsBySubscription("xcf", 5);
-  print res
+    # createUser bob
+    print "createUser for Bob .."
+    if do_RPC('createUser', 'bob'):
+        print 'Failed!'
+    else: 
+        print "Passed!"
 
-  Close!
-  transport.close()
+    # createUser alice again!
+    print "createUser for Alice .."
+    if not (do_RPC('createUser','alice') == 'AlreadyExistsException'):
+        print "Failed! Expecting \'AlreadyExistsException\'"
+    else: 
+        print "Passed!"
 
-except Thrift.TException, tx:
-  print '%s' % (tx.message)
+    # Bob posts a tweet 
+    tweet_1 = "In high society, TCP is more welcome than UDP."
+    print "Bob posts a tweet ..%s"%(tweet_1)
+    if do_RPC('post','bob', tweet_1):
+        print 'Failed!'
+    else: 
+        print "Passed!"
+   
+    # Bob posts a tweet 
+    tweet_2 = " At least it knows a proper handshake."
+    print "Bob posts a tweet ..%s"%(tweet_2)
+    if do_RPC('post','bob', tweet_2):
+        print 'Failed!'
+    else: 
+        print "Passed!"
+  
+    # Alice reads Bob's tweets
+    print "Alice reads Bob's tweets"
+    bob_tweets = do_RPC('readTweetsByUser','bob',10)  
+    if not(bob_tweets[0].tweetString == tweet_2 and
+           bob_tweets[1].tweetString == tweet_1):
+         print "Failed!"     
+    else: 
+        print "Passed!"
+
+    print "Alice star not existing tweets"
+    if not (do_RPC('star','alice', 200) == "NoSuchTweetException" ):
+        print 'Failed!'
+    else: 
+        print "Passed!"
+
+
+    print "Alice star Bob's tweets"
+    if do_RPC('star','alice', 1):
+        print 'Failed!'
+    else: 
+        print "Passed!"
+
+    print "Alice reads Bob's tweets"
+    bob_tweets = do_RPC('readTweetsByUser','bob',10)  
+    if not(bob_tweets[1].numStars == 1 and
+           bob_tweets[1].tweetString == tweet_1):
+         print "Failed!"     
+    else: 
+        print "Passed!"
+
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Test createUser")
+    parser.add_argument("host",  action="store", help="server:port", default="localhost:9090")
+    args = parser.parse_args()
+    server,port = args.host.split(":")
+    do_tests()
+
+
+
+

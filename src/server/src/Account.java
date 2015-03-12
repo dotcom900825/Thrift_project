@@ -36,21 +36,26 @@ public class Account {
       tweet_arraylist.add(tweet);
     }
 
-    public synchronized boolean favoriting_tweet(long tweet_id, String handle){
-      if(tweet_like.get(tweet_id).contains(handle)){
-        return false;
+    public synchronized int favoriting_tweet(long tweet_id, String handle){
+      if(!tweet_lists.containsKey(tweet_id)){
+        return -1;
       }
 
-      if(!tweet_lists.contains(tweet_id)){
-        return false;
+      if(!tweet_like.containsKey(tweet_id)){
+        tweet_like.put(tweet_id, new ArrayList<String>());
       }
+
+      if(tweet_like.get(tweet_id).contains(handle)){
+        return 2;
+      }
+
 
       Tweet target = tweet_lists.get(tweet_id);
       int num = target.getNumStars();
       target.setNumStars(num + 1);
-      tweet_like.get(tweet_id).push(handle);
+      tweet_like.get(tweet_id).add(handle);
 
-      return true;
+      return 1;
     }
 
     public ArrayList<Tweet> getTweetArrayList(){

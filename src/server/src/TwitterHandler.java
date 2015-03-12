@@ -8,6 +8,7 @@ import java.util.PriorityQueue;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TwitterHandler implements Twitter.Iface {
     protected Map<String,Account> accounts;
@@ -181,12 +182,14 @@ public class TwitterHandler implements Twitter.Iface {
             throw new NoSuchUserException(handle);
         }
 
-        for (Map.Entry<String, String> entry : accounts.entrySet())
+        for (Map.Entry<String, Account> entry : accounts.entrySet())
         {
-            if (entry.getValue.favoriting_tweet(tweetId, handle)) {
-                break;
-            }
-            
+            int rtn = entry.getValue().favoriting_tweet(tweetId, handle);
+            if (rtn == 1 || rtn == 2) {
+                return;
+            }   
         }
+
+        throw new NoSuchTweetException();
     }
 }
