@@ -67,6 +67,14 @@ try:
   client.subscribe("xcf", "ymq")
   print 'xcf succefully subscribed to ymq account'
 
+  # we also need to test the star successfully
+
+  # test tweet too long exception
+  client.post("ymq", "Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! ")
+
+  # test not such tweet exception
+  client.star("dotcomXY" ,87654321 )
+
   sleep(0.1)
   client.post("dotcomXY", "1")
   print "dotcomXY succefully post a new tweet1"
