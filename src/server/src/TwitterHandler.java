@@ -183,7 +183,7 @@ public class TwitterHandler implements Twitter.Iface {
 
         for (Map.Entry<String, String> entry : accounts.entrySet())
         {
-            if (entry.getValue.favoriting_tweet(tweetId, handle);) {
+            if (entry.getValue.favoriting_tweet(tweetId, handle)) {
                 break;
             }
             

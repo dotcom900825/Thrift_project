@@ -36,7 +36,7 @@ public class Account {
       tweet_arraylist.add(tweet);
     }
 
-    public boolean synchronized void favoriting_tweet(long tweet_id, String handle){
+    public synchronized boolean favoriting_tweet(long tweet_id, String handle){
       if(tweet_like.get(tweet_id).contains(handle)){
         return false;
       }
