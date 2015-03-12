@@ -11,6 +11,7 @@ public class Account {
         this.following_accounts = new ArrayList<String>();
         this.tweet_lists = new HashMap<Long, Tweet>();
         this.tweet_arraylist = new ArrayList<Tweet>();
+        this.tweet_like = new HashMap<Long, ArrayList<String>>();
     }
 
     public synchronized void add_to_subscribed_accounts(String handle){
@@ -35,10 +36,21 @@ public class Account {
       tweet_arraylist.add(tweet);
     }
 
-    public synchronized void favoriting_tweet(long tweet_id){
+    public boolean synchronized void favoriting_tweet(long tweet_id, String handle){
+      if(tweet_like.get(tweet_id).contains(handle)){
+        return false;
+      }
+
+      if(!tweet_lists.contains(tweet_id)){
+        return false;
+      }
+
       Tweet target = tweet_lists.get(tweet_id);
       int num = target.getNumStars();
       target.setNumStars(num + 1);
+      tweet_like.get(tweet_id).push(handle);
+
+      return true;
     }
 
     public ArrayList<Tweet> getTweetArrayList(){
@@ -46,6 +58,7 @@ public class Account {
     }
 
     public String handle;
+    private Map<Long, ArrayList<String>> tweet_like;
     private ArrayList<String> following_accounts;
     private Map<Long,Tweet> tweet_lists;
     private ArrayList<Tweet> tweet_arraylist;

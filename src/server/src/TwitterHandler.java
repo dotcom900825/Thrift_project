@@ -12,9 +12,11 @@ import java.util.Comparator;
 public class TwitterHandler implements Twitter.Iface {
     protected Map<String,Account> accounts;
     protected Random rnd;
+    protected AtomicInteger seq;
     public TwitterHandler() {
         this.rnd = new Random();
         this.accounts = new HashMap<String, Account>();
+        this.seq = new AtomicInteger();
     }
 
 
@@ -84,7 +86,7 @@ public class TwitterHandler implements Twitter.Iface {
         Account target = accounts.get(handle);
 
         Tweet new_tweet = new Tweet(
-            (long)rnd.nextInt(Integer.MAX_VALUE),
+            this.seq.incrementAndGet(),
             handle,
             System.currentTimeMillis(),
             0,
@@ -179,8 +181,12 @@ public class TwitterHandler implements Twitter.Iface {
             throw new NoSuchUserException(handle);
         }
 
-        Account target = accounts.get(handle);
-        target.favoriting_tweet(tweetId);
-
+        for (Map.Entry<String, String> entry : accounts.entrySet())
+        {
+            if (entry.getValue.favoriting_tweet(tweetId, handle);) {
+                break;
+            }
+            
+        }
     }
 }

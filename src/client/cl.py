@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import sys
-import threading
 from time import sleep
 sys.path.append('gen-py')
 
@@ -12,15 +11,6 @@ from thrift import Thrift
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
-
-def createUser(client, name):
-  try:
-    print "start executing"
-    client.createUser(name)
-    print "Succefully created user dotcomXY"
-
-  except AlreadyExistsException, userx:
-    print 'AlreadyExistsException'
 
 try:
   transport = TSocket.TSocket('localhost', 9876)
@@ -39,12 +29,6 @@ try:
 
   client.ping()
   print 'ping()'
-
-  t1 = threading.Thread(target = createUser, args = (client, "dotcomXY"))
-  t2 = threading.Thread(target = createUser, args = (client, "dotcomXY"))
-
-  t1.start()
-  t2.start()
 
   client.createUser("dotcomXY")
   print 'Succefully created user dotcomXY'
@@ -71,9 +55,6 @@ try:
 
   # test tweet too long exception
   client.post("ymq", "Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! Hello world! ")
-
-  # test not such tweet exception
-  client.star("dotcomXY" ,87654321 )
 
   sleep(0.1)
   client.post("dotcomXY", "1")
@@ -114,6 +95,10 @@ try:
   sleep(0.1)
   client.post("ymq", "10")
   print "ymq succefully post a new tweet55"
+
+  # test not such tweet exception
+  #client.star("dotcomXY" ,87654321 )
+
 
   res = client.readTweetsByUser("dotcomXY", 3);
   print res
